@@ -14,6 +14,7 @@ public class Boggle {
      * -> each path would need a "travel log" keeping track of places it's been on the board
      *
      * - use dfs?
+     * -> We talked about how to use this in class, incorporate using slides
      * -> parent node structure so that we can traverse in reverse using the parental nodes.
      * -> Go all the way down, and if it's a deadend, go back and check if the other available options would form a word.
      *
@@ -35,12 +36,52 @@ public class Boggle {
 
 
 
-
-
         // Convert the list into a sorted array of strings of all dictionary words found in the board, then return the array.
         String[] sol = new String[goodWords.size()];
         goodWords.toArray(sol);
         Arrays.sort(sol);
         return sol;
+    }
+
+    // possible DFS implementation
+    public void dfs(char[][] grid, int col, int row)
+    {
+        //out of bounds base case, making sure we stay inside grid.
+        if (col < 0 || row < 0 || col >= grid.length || row >= grid[0].length)
+        {
+            return;
+        }
+        //base case; checking if we've visited this square before
+        if (grid[col][row] == '0')
+        {
+            return;
+        }
+        //base case for invalid prefix?
+
+        //If it isn't caught in the two base cases, mark square as visited.
+        grid[col][row] = '0';
+
+        //recurse
+        dfs(grid, col - 1, row);
+        dfs(grid, col + 1, row);
+        dfs(grid, col, row - 1);
+        dfs(grid, col, row + 1);
+    }
+
+    public int numIslands(char[][] grid)
+    {
+        int count = 0;
+
+        for(int i = 0; i < grid.length; i++)
+        {
+            for(int j = 0; j < grid[0].length; j++)
+            {
+                if (grid[i][j] == '1')
+                {
+                    dfs(grid, i, j);
+                    count++;
+                }
+            }
+        }
     }
 }
